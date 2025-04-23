@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        android:width="108dp"
+        android:height="108dp"
+        android:viewportWidth="108"
+        android:viewportHeight="108">
+    
+    <!-- Chat bubble icon for ChatterBox app -->
+    <group
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:translateX="27"
+        android:translateY="27">
+        
+        <!-- Main Chat Bubble -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M84,11H24c-7.72,0 -14,6.28 -14,14v30c0,7.72 6.28,14 14,14h10v14c0,1.75 1.99,2.72 3.41,1.66L64,70h20c7.72,0 14,-6.28 14,-14V25c0,-7.72 -6.28,-14 -14,-14z"/>
+            
+        <!-- Dots representing text in the chat bubble -->
+        <path
+            android:fillColor="#4A5FE8"
+            android:pathData="M32,39m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"/>
+        <path
+            android:fillColor="#4A5FE8"
+            android:pathData="M54,39m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"/>
+        <path
+            android:fillColor="#4A5FE8"
+            android:pathData="M76,39m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"/>
+    </group>
+</vector>

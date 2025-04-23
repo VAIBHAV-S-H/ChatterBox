@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <color name="primary">#5C6BC0</color>           <!-- Soft indigo -->
+    <color name="primary_light">#8E99F3</color>     <!-- Light indigo -->
+    <color name="primary_dark">#26418F</color>      <!-- Dark indigo -->
+    
+    <color name="secondary">#4FC3F7</color>         <!-- Soft blue -->
+    <color name="secondary_light">#8BF5FF</color>   <!-- Light blue -->
+    <color name="secondary_dark">#0093C4</color>    <!-- Dark blue -->
+    
+    <color name="background">#F5F7FA</color>        <!-- Off white -->
+    <color name="surface">#FFFFFF</color>           <!-- Pure white -->
+    
+    <color name="text_primary">#212121</color>      <!-- Dark gray for primary text -->
+    <color name="text_secondary">#757575</color>    <!-- Medium gray for secondary text -->
+    <color name="text_hint">#9E9E9E</color>         <!-- Light gray for hints -->
+    
+    <color name="message_sent">#E3F0F9</color>      <!-- Light blue for sent messages -->
+    <color name="message_received">#F0F0F0</color>  <!-- Light gray for received messages -->
+    
+    <color name="accent">#26A69A</color>            <!-- Teal accent -->
+    <color name="error">#EF5350</color>             <!-- Soft red for error states -->
+</resources>
