@@ -14,18 +14,44 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.MessagingApp"
+            android:hardwareAccelerated="true"
             tools:targetApi="31">
-        <activity android:name=".LoginActivity" android:exported="true">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"/>
-        <activity android:name=".ChatActivity"/>
-        <activity android:name=".HomeActivity"/>
-    
-    
+        <activity 
+            android:name=".RegisterActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".UserListActivity"
+            android:exported="false" 
+            android:label="Contacts"
+            android:theme="@style/Theme.MessagingApp.NoActionBar"/>
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false"
+            android:parentActivityName=".UserListActivity"/>
+        <activity
+            android:name=".admin.AdminEncryptionVisualizerActivity"
+            android:exported="false" />
+        <activity 
+            android:name=".HomeActivity"
+            android:exported="false" />
+            
+        <!-- Configure QR code scanner activities -->
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            tools:replace="android:screenOrientation" />
     </application>
 
 </manifest>

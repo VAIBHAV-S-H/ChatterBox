@@ -63,7 +63,7 @@ class MessageAdapter(
         private val timeText: TextView = itemView.findViewById(R.id.text_timestamp_sent)
 
         fun bind(message: Message) {
-            messageText.text = message.text
+            messageText.text = message.decryptedText ?: message.encryptedText
             timeText.text = formatTimestamp(message.timestamp)
         }
     }
@@ -73,7 +73,7 @@ class MessageAdapter(
         private val timeText: TextView = itemView.findViewById(R.id.text_timestamp_received)
 
         fun bind(message: Message) {
-            messageText.text = message.text
+            messageText.text = message.decryptedText ?: message.encryptedText
             timeText.text = formatTimestamp(message.timestamp)
         }
     }

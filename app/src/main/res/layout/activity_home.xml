@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center"
-        android:text="No users found.\nInvite friends to join!"
+        android:text="No connected friends found.\n\nTap the 'Connect' button to add friends using their friend code or QR code."
         android:textColor="@color/text_primary"
         android:textSize="16sp"
         android:visibility="gone"

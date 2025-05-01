@@ -7,27 +7,23 @@ import android.security.keystore.KeyProperties
 import android.util.Base64
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import java.security.KeyPair
-import java.security.KeyPairGenerator
 import java.security.KeyStore
-import java.security.PrivateKey
-import java.security.PublicKey
 import javax.crypto.SecretKey
+import javax.crypto.KeyGenerator
 
 /**
  * Manages encryption keys including:
- * - Generation of key pairs
- * - Storage of private keys securely
- * - Exchange of public keys
+ * - Generation of AES keys
+ * - Storage of keys securely
  * - Handling of session keys
  */
 class KeyManager(private val context: Context) {
     
     companion object {
         private const val PREFS_NAME = "com.example.messagingapp.keys"
-        private const val KEY_PRIVATE_KEY = "private_key"
+        private const val KEY_SECRET_KEY = "secret_key"
         private const val ANDROID_KEYSTORE = "AndroidKeyStore"
-        private const val RSA_ALIAS = "com.example.messagingapp.RSA"
+        private const val AES_ALIAS = "com.example.messagingapp.AES"
     }
     
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -36,111 +32,82 @@ class KeyManager(private val context: Context) {
     private val database = FirebaseDatabase.getInstance().getReference("users")
     
     /**
-     * Generate and store a new RSA key pair for the current user
+     * Generate and store a new AES key for the current user
      */
-    fun generateAndStoreKeyPair(): KeyPair {
-        // Generate a new key pair
-        val keyPair = generateKeyPair()
+    fun generateAndStoreKey(): SecretKey {
+        // Generate a new key
+        val key = generateAESKey()
         
-        // Store private key securely
-        savePrivateKey(keyPair)
+        // Store key securely
+        saveSecretKey(key)
         
-        // Upload public key to Firebase
-        auth.currentUser?.uid?.let { userId ->
-            val publicKeyString = cryptoManager.publicKeyToString(keyPair.public)
-            database.child(userId).child("publicKey").setValue(publicKeyString)
-        }
-        
-        return keyPair
+        return key
     }
     
     /**
-     * Generate a new RSA key pair
+     * Generate a new AES key
      */
-    private fun generateKeyPair(): KeyPair {
+    private fun generateAESKey(): SecretKey {
         // Try to use Android Keystore for security
         try {
-            val keyPairGenerator = KeyPairGenerator.getInstance(
-                KeyProperties.KEY_ALGORITHM_RSA, ANDROID_KEYSTORE
+            val keyGenerator = KeyGenerator.getInstance(
+                KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE
             )
             
             val spec = KeyGenParameterSpec.Builder(
-                RSA_ALIAS,
-                KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT or
-                        KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY
+                AES_ALIAS,
+                KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
             )
-                .setDigests(KeyProperties.DIGEST_SHA256)
-                .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
-                .setKeySize(2048)
+                .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                .setKeySize(256)
                 .build()
             
-            keyPairGenerator.initialize(spec)
-            return keyPairGenerator.generateKeyPair()
+            keyGenerator.init(spec)
+            return keyGenerator.generateKey()
         } catch (e: Exception) {
-            // Fall back to regular KeyPairGenerator if Keystore isn't available
-            return cryptoManager.generateRSAKeyPair()
+            // Fall back to regular KeyGenerator if Keystore isn't available
+            return cryptoManager.generateAESKey()
         }
     }
     
     /**
-     * Save private key securely
+     * Save AES key securely
      */
-    private fun savePrivateKey(keyPair: KeyPair) {
-        // If using Android Keystore, the private key is already stored securely
-        if (keyPair.private.algorithm == "AndroidKeyStore") {
+    private fun saveSecretKey(key: SecretKey) {
+        // If using Android Keystore, the key is already stored securely
+        if (key.algorithm == "AndroidKeyStore") {
             return
         }
         
         // Otherwise, encrypt and store in SharedPreferences
-        val privateKeyEncoded = Base64.encodeToString(keyPair.private.encoded, Base64.NO_WRAP)
-        prefs.edit().putString(KEY_PRIVATE_KEY, privateKeyEncoded).apply()
+        val keyEncoded = Base64.encodeToString(key.encoded, Base64.NO_WRAP)
+        prefs.edit().putString(KEY_SECRET_KEY, keyEncoded).apply()
     }
     
     /**
-     * Get the user's private key
+     * Get the user's secret key
      */
-    fun getPrivateKey(): PrivateKey? {
+    fun getSecretKey(): SecretKey? {
         try {
             // Try to get from Android Keystore first
             val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE)
             keyStore.load(null)
             
-            if (keyStore.containsAlias(RSA_ALIAS)) {
-                val entry = keyStore.getEntry(RSA_ALIAS, null) as? KeyStore.PrivateKeyEntry
-                return entry?.privateKey
+            if (keyStore.containsAlias(AES_ALIAS)) {
+                val entry = keyStore.getEntry(AES_ALIAS, null) as? KeyStore.SecretKeyEntry
+                return entry?.secretKey
             }
             
             // Fall back to SharedPreferences
-            val privateKeyString = prefs.getString(KEY_PRIVATE_KEY, null) ?: return null
-            val keyBytes = Base64.decode(privateKeyString, Base64.NO_WRAP)
+            val keyString = prefs.getString(KEY_SECRET_KEY, null) ?: return null
+            val keyBytes = Base64.decode(keyString, Base64.NO_WRAP)
             
-            // This is a simplified example - in a real app you would securely transform
-            // these bytes back into a PrivateKey using appropriate factories
-            return null // Replace with actual implementation
+            return cryptoManager.stringToSecretKey(keyString)
         } catch (e: Exception) {
             e.printStackTrace()
             return null
         }
-    }
-    
-    /**
-     * Fetch a user's public key from Firebase
-     */
-    fun getUserPublicKey(userId: String, callback: (PublicKey?) -> Unit) {
-        database.child(userId).child("publicKey").get()
-            .addOnSuccessListener { snapshot ->
-                val publicKeyString = snapshot.getValue(String::class.java)
-                if (publicKeyString != null) {
-                    val publicKey = cryptoManager.stringToPublicKey(publicKeyString)
-                    callback(publicKey)
-                } else {
-                    callback(null)
-                }
-            }
-            .addOnFailureListener {
-                callback(null)
-            }
     }
     
     /**

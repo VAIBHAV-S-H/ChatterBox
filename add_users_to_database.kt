@@ -12,23 +12,21 @@ fun addExistingUsersToDatabase() {
     // Note: Replace these with your actual user IDs, emails, and names
     val users = listOf(
         User(
-            id = "7P4pilOp0TVgrMatr1jyYRYnLFaT2", // From your Firebase Auth console
+            uid = "7P4pilOp0TVgrMatr1jyYRYnLFaT2", // From your Firebase Auth console
             email = "eonicsimurgh@gmail.com",
-            name = "Simurgh", // Or whatever display name you want
-            publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzJU1KCzvVHa/VkDgKE3NnPslXQneFXtqDv0xCQQiDX5WK1z2NBUfMJORvO9MixRpbRJP8Jgp4wGUu6o8W/8zJDQ4WgqBUR4mLzujtUM1KQ5vxE07K3YcWnGJHM3Kt0Gc8QlzkGxbaTWc0oX9KWQ1vVyInwHcWaZRMAk+L0pLJrWsJ3SCJqSJ7RjBJ0ck3NMXBB9D2+uDQouF7v3g+r4hD8EIRZ2hIvVOBxBbxjHZgx95Hsk5LHCw5UfJCJxm9s6o8p75bEbMdAn28V5QHD4oKvZ+UlDQM7UuYy5BL1U8uBa3ZSXX4HCj1xnbYIIyVVA4TJxQtXqX7XLbK3UiOwIDAQAB"
+            name = "Simurgh" // Or whatever display name you want
         ),
         User(
-            id = "yWV8r3DSEgd5M2nuGydFhIL31OD2", // From your Firebase Auth console
+            uid = "yWV8r3DSEgd5M2nuGydFhIL31OD2", // From your Firebase Auth console
             email = "1nt22cs211.vaibhav@nmit.ac.in",
-            name = "Vaibhav", // Or whatever display name you want  
-            publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzJU1KCzvVHa/VkDgKE3NnPslXQneFXtqDv0xCQQiDX5WK1z2NBUfMJORvO9MixRpbRJP8Jgp4wGUu6o8W/8zJDQ4WgqBUR4mLzujtUM1KQ5vxE07K3YcWnGJHM3Kt0Gc8QlzkGxbaTWc0oX9KWQ1vVyInwHcWaZRMAk+L0pLJrWsJ3SCJqSJ7RjBJ0ck3NMXBB9D2+uDQouF7v3g+r4hD8EIRZ2hIvVOBxBbxjHZgx95Hsk5LHCw5UfJCJxm9s6o8p75bEbMdAn28V5QHD4oKvZ+UlDQM7UuYy5BL1U8uBa3ZSXX4HCj1xnbYIIyVVA4TJxQtXqX7XLbK3UiOwIDAQAB"
+            name = "Vaibhav" // Or whatever display name you want  
         )
     )
     
     // Add each user to the database
     for (user in users) {
-        if (user.id != null) {
-            database.child(user.id).setValue(user)
+        if (user.uid != null) {
+            database.child(user.uid!!).setValue(user)
                 .addOnSuccessListener {
                     println("Added user ${user.name} to database")
                 }

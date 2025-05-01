@@ -3,24 +3,28 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     
-    <color name="primary">#5C6BC0</color>           <!-- Soft indigo -->
-    <color name="primary_light">#8E99F3</color>     <!-- Light indigo -->
-    <color name="primary_dark">#26418F</color>      <!-- Dark indigo -->
+    <!-- New light, professional color palette -->
+    <color name="primary">#A798FF</color>           <!-- Light Purple -->
+    <color name="primary_light">#C8BFFF</color>     <!-- Lighter Purple -->
+    <color name="primary_dark">#8C7FE3</color>      <!-- Slightly darker Purple -->
     
-    <color name="secondary">#4FC3F7</color>         <!-- Soft blue -->
-    <color name="secondary_light">#8BF5FF</color>   <!-- Light blue -->
-    <color name="secondary_dark">#0093C4</color>    <!-- Dark blue -->
+    <color name="secondary">#81C3F3</color>         <!-- Light Blue -->
+    <color name="secondary_light">#BAE1FF</color>   <!-- Lighter Blue -->
+    <color name="secondary_dark">#65A1D6</color>    <!-- Slightly darker Blue -->
     
-    <color name="background">#F5F7FA</color>        <!-- Off white -->
+    <color name="accent">#FFB9A5</color>            <!-- Peach -->
+    <color name="accent_light">#FFD8CC</color>      <!-- Lighter Peach -->
+    <color name="accent_dark">#EF9A84</color>       <!-- Slightly darker Peach -->
+    
+    <color name="background">#F8F8FC</color>        <!-- Off white with slight purple tint -->
     <color name="surface">#FFFFFF</color>           <!-- Pure white -->
     
-    <color name="text_primary">#212121</color>      <!-- Dark gray for primary text -->
-    <color name="text_secondary">#757575</color>    <!-- Medium gray for secondary text -->
-    <color name="text_hint">#9E9E9E</color>         <!-- Light gray for hints -->
+    <color name="text_primary">#484860</color>      <!-- Dark blue-gray for primary text -->
+    <color name="text_secondary">#7E7E99</color>    <!-- Medium blue-gray for secondary text -->
+    <color name="text_hint">#AEAEBF</color>         <!-- Light gray with hint of purple for hints -->
     
-    <color name="message_sent">#E3F0F9</color>      <!-- Light blue for sent messages -->
-    <color name="message_received">#F0F0F0</color>  <!-- Light gray for received messages -->
+    <color name="message_sent">#EEF5FF</color>      <!-- Very light blue for sent messages -->
+    <color name="message_received">#F5F0FF</color>  <!-- Very light purple for received messages -->
     
-    <color name="accent">#26A69A</color>            <!-- Teal accent -->
-    <color name="error">#EF5350</color>             <!-- Soft red for error states -->
+    <color name="error">#F5898A</color>             <!-- Soft red for error states -->
 </resources>

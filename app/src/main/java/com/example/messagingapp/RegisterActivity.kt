@@ -47,16 +47,14 @@ class RegisterActivity : AppCompatActivity() {
                 auth.createUserWithEmailAndPassword(emailText, passwordText)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            // Generate a key pair for this user
-                            val keyPair = keyManager.generateAndStoreKeyPair()
-                            val publicKeyString = cryptoManager.publicKeyToString(keyPair.public)
+                            // Generate a key for this user
+                            val secretKey = cryptoManager.generateAESKey()
                             
-                            // Create user with public key
+                            // Create user
                             val user = User(
-                                id = auth.currentUser!!.uid,
+                                uid = auth.currentUser!!.uid,
                                 email = emailText,
-                                name = usernameText,
-                                publicKey = publicKeyString
+                                name = usernameText
                             )
                             
                             database.child(auth.currentUser!!.uid).setValue(user)

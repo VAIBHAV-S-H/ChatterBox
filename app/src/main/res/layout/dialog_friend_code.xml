@@ -3,41 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center">
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/qrCodeImageView"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_gravity="center"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
         android:contentDescription="QR Code" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Your Friend Code:"
-        android:textSize="16sp"
-        android:textColor="@color/text_primary" />
-
-    <TextView
         android:id="@+id/friendCodeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/primary"
-        android:textIsSelectable="true"
-        android:fontFamily="monospace" />
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Share this code with friends to connect. They can scan this QR code or enter the code manually."
-        android:textAlignment="center"
-        android:textSize="14sp" />
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="XXX-XXX-XXX-XXX" />
 
 </LinearLayout> 

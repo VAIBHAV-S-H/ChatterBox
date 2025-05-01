@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/textSender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sender: User123"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textOriginal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Original: Hello world" />
+
+        <TextView
+            android:id="@+id/textEncrypted"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Encrypted: a1b2c3d4e5"
+            android:textColor="@color/text_secondary" />
+
+        <TextView
+            android:id="@+id/textTimestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="06/01/2023 12:34"
+            android:textColor="@color/text_hint"
+            android:textSize="12sp"
+            android:gravity="end" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView> 

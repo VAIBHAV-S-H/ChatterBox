@@ -3,22 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     
     <item
+        android:id="@+id/action_refresh"
+        android:title="Refresh Connections"
+        android:icon="@android:drawable/ic_popup_sync"
+        app:showAsAction="ifRoom"/>
+    
+    <item
         android:id="@+id/action_user_profile"
         android:title="User Profile"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        app:showAsAction="never"/>
+    
+    <item
+        android:id="@+id/action_friend_code"
+        android:title="Connect"
+        android:icon="@android:drawable/ic_menu_add"
         app:showAsAction="never"/>
     
     <item
         android:id="@+id/action_logout"
         android:title="Logout"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
         app:showAsAction="never"/>
     
-    <item
-        android:id="@+id/action_friend_code"
-        android:title="Connect with Friend"
-        app:showAsAction="never"/>
-        
+    <!-- Admin-only item, will be shown conditionally in code -->
     <item
         android:id="@+id/action_add_existing_users"
         android:title="Add Existing Users"
+        android:visible="false"
         app:showAsAction="never"/>
 </menu> 
