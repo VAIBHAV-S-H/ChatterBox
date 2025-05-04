@@ -1,6 +1,5 @@
 package com.example.messagingapp
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -40,9 +39,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var userAdapter: UserAdapter
     private lateinit var adminManager: AdminManager
     private val TAG = "HomeActivity"
-
-    // Keep a cached copy of the current user profile
-    private var cachedUserProfile: User? = null
 
     // Add a reference to the add friend dialog to be used for permissions
     private var addFriendDialog: AddFriendDialog? = null
@@ -442,16 +438,6 @@ class HomeActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e(TAG, "Error setting overflow icon color: ${e.message}")
         }
-    }
-
-    // Helper method to create a spannable with white text
-    private fun createWhiteSpannable(text: String): CharSequence {
-        val spannable = android.text.SpannableString(text)
-        spannable.setSpan(
-            android.text.style.ForegroundColorSpan(android.graphics.Color.WHITE),
-            0, spannable.length, 0
-        )
-        return spannable
     }
 
     private fun showUserProfile() {
