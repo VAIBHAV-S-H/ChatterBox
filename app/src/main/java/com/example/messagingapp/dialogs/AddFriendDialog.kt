@@ -40,7 +40,7 @@ class AddFriendDialog(private val context: Context) {
     fun show() {
         try {
             val options = arrayOf("Show My Friend Code", "Enter Friend Code")
-            
+
             AlertDialog.Builder(context)
                 .setTitle("Connect with Friend")
                 .setItems(options) { _, which ->
@@ -64,13 +64,13 @@ class AddFriendDialog(private val context: Context) {
                 Toast.makeText(context, "You must be logged in to share your code", Toast.LENGTH_SHORT).show()
                 return
             }
-            
+
             val friendCode = generateFriendCode(currentUser.uid)
-    
+
             val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_friend_code, null)
             val qrCodeImageView = dialogView.findViewById<ImageView>(R.id.qrCodeImageView)
             val friendCodeTextView = dialogView.findViewById<TextView>(R.id.friendCodeTextView)
-    
+
             try {
                 val multiFormatWriter = MultiFormatWriter()
                 val bitMatrix = multiFormatWriter.encode(
@@ -87,7 +87,7 @@ class AddFriendDialog(private val context: Context) {
                 Log.e(TAG, "Error generating QR code", e)
                 friendCodeTextView.text = friendCode
             }
-    
+
             AlertDialog.Builder(context)
                 .setTitle("Your Friend Code")
                 .setView(dialogView)
@@ -115,7 +115,7 @@ class AddFriendDialog(private val context: Context) {
             val input = EditText(context)
             input.hint = "XXX-XXX-XXX-XXX"
             input.filters = arrayOf(android.text.InputFilter.AllCaps(), android.text.InputFilter.LengthFilter(15))
-    
+
             AlertDialog.Builder(context)
                 .setTitle("Enter Friend Code")
                 .setView(input)
@@ -154,18 +154,18 @@ class AddFriendDialog(private val context: Context) {
         try {
             val cleanedCode = decodeFriendCode(friendCode)
             Log.d(TAG, "Looking up user with decoded friend code: $cleanedCode")
-            
+
             val currentUserId = auth.currentUser?.uid
             if (currentUserId == null) {
                 Toast.makeText(context, "You must be logged in to connect with others", Toast.LENGTH_SHORT).show()
                 return
             }
-            
+
             if (currentUserId.lowercase() == cleanedCode) {
                 Toast.makeText(context, "Cannot add yourself as a friend", Toast.LENGTH_SHORT).show()
                 return
             }
-            
+
             // First try a direct lookup by UID
             usersRef.child(cleanedCode).get()
                 .addOnSuccessListener { snapshot ->
@@ -197,24 +197,24 @@ class AddFriendDialog(private val context: Context) {
         usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var foundUser: User? = null
-                
+
                 // Log all users for debugging
                 Log.d(TAG, "Searching through all users (${snapshot.childrenCount}):")
-                
+
                 for (userSnapshot in snapshot.children) {
                     val user = userSnapshot.getValue(User::class.java)
                     Log.d(TAG, "Checking user: ${user?.uid}")
-                    
+
                     if (user != null) {
                         // Check if the user ID matches the cleaned code
-                        if (user.uid?.lowercase() == cleanedCode || 
+                        if (user.uid?.lowercase() == cleanedCode ||
                             decodeFriendCode(generateFriendCode(user.uid ?: "")) == cleanedCode) {
                             foundUser = user
                             break
                         }
                     }
                 }
-                
+
                 if (foundUser != null) {
                     Log.d(TAG, "Found user by full search: ${foundUser.uid}")
                     showUserConnectionConfirmation(foundUser)
@@ -223,7 +223,7 @@ class AddFriendDialog(private val context: Context) {
                     Toast.makeText(context, "User not found. Please check the friend code.", Toast.LENGTH_SHORT).show()
                 }
             }
-            
+
             override fun onCancelled(error: DatabaseError) {
                 Log.e(TAG, "Database error in full search", error.toException())
                 Toast.makeText(context, "Failed to search for user", Toast.LENGTH_SHORT).show()
@@ -241,12 +241,12 @@ class AddFriendDialog(private val context: Context) {
                         // Create a bi-directional connection between users
                         createConnection(auth.currentUser!!.uid, user.uid!!)
                         Toast.makeText(context, "Connected with ${user.name ?: "User"}", Toast.LENGTH_SHORT).show()
-                        
+
                         // Verify connections were created by directly querying Firebase
                         Handler(Looper.getMainLooper()).postDelayed({
                             verifyConnectionsCreated(auth.currentUser!!.uid, user.uid!!)
                         }, 1000)  // Wait 1 second before checking
-                        
+
                         // Open chat with this user
                         val intent = Intent(context, ChatActivity::class.java)
                         intent.putExtra("userId", user.uid)
@@ -264,11 +264,11 @@ class AddFriendDialog(private val context: Context) {
             Toast.makeText(context, "Error connecting with user", Toast.LENGTH_SHORT).show()
         }
     }
-    
+
     // Create a bi-directional connection between two users
     private fun createConnection(userId1: String, userId2: String) {
         val timestamp = System.currentTimeMillis()
-        
+
         // Connection from user1 to user2
         val connection1 = UserConnection(
             userId = userId1,
@@ -276,7 +276,7 @@ class AddFriendDialog(private val context: Context) {
             timestamp = timestamp,
             status = "active"
         )
-        
+
         // Connection from user2 to user1
         val connection2 = UserConnection(
             userId = userId2,
@@ -284,14 +284,14 @@ class AddFriendDialog(private val context: Context) {
             timestamp = timestamp,
             status = "active"
         )
-        
+
         // Create a unique ID for each connection
         val connectionId1 = "${userId1}_${userId2}"
         val connectionId2 = "${userId2}_${userId1}"
-        
+
         Log.d(TAG, "Creating connection with IDs: $connectionId1 and $connectionId2")
         Log.d(TAG, "Connection ref path: ${connectionsRef.toString()}")
-        
+
         // Save connections with completion listeners to ensure they are saved
         connectionsRef.child(connectionId1).setValue(connection1)
             .addOnSuccessListener {
@@ -301,17 +301,17 @@ class AddFriendDialog(private val context: Context) {
                 Log.e(TAG, "Failed to save connection from $userId1 to $userId2: ${e.message}")
                 Toast.makeText(context, "Error saving connection", Toast.LENGTH_SHORT).show()
             }
-        
+
         connectionsRef.child(connectionId2).setValue(connection2)
             .addOnSuccessListener {
                 Log.d(TAG, "Successfully saved connection from $userId2 to $userId1")
-                
+
                 // Trigger an immediate refresh by forcing the app to update the view
                 if (context is Activity) {
                     try {
                         // Notify that data has changed
                         Toast.makeText(context, "Connection successful! Refreshing...", Toast.LENGTH_SHORT).show()
-                        
+
                         // Force a UI reload when returning to HomeActivity
                         Handler(Looper.getMainLooper()).postDelayed({
                             if (context is HomeActivity) {
@@ -327,7 +327,7 @@ class AddFriendDialog(private val context: Context) {
                 Log.e(TAG, "Failed to save connection from $userId2 to $userId1: ${e.message}")
                 Toast.makeText(context, "Error saving reverse connection", Toast.LENGTH_SHORT).show()
             }
-        
+
         Log.d(TAG, "Created bi-directional connection between $userId1 and $userId2")
     }
 
@@ -335,9 +335,9 @@ class AddFriendDialog(private val context: Context) {
         // Create the connection IDs
         val connectionId1 = "${userId1}_${userId2}"
         val connectionId2 = "${userId2}_${userId1}"
-        
+
         Log.d(TAG, "Verifying connections with IDs: $connectionId1 and $connectionId2")
-        
+
         // Check if the first connection exists
         connectionsRef.child(connectionId1).get()
             .addOnSuccessListener { dataSnapshot ->
@@ -352,7 +352,7 @@ class AddFriendDialog(private val context: Context) {
             .addOnFailureListener { e ->
                 Log.e(TAG, "Error verifying connection $connectionId1: ${e.message}")
             }
-        
+
         // Check if the second connection exists
         connectionsRef.child(connectionId2).get()
             .addOnSuccessListener { dataSnapshot ->
@@ -367,7 +367,7 @@ class AddFriendDialog(private val context: Context) {
             .addOnFailureListener { e ->
                 Log.e(TAG, "Error verifying connection $connectionId2: ${e.message}")
             }
-        
+
         // Also check if we can find it in a general query
         connectionsRef.orderByChild("userId").equalTo(userId1)
             .addListenerForSingleValueEvent(object : ValueEventListener {

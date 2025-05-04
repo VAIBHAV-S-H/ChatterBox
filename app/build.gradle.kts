@@ -1,3 +1,4 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -55,10 +56,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
     
-    // QR Code scanning
-    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-    implementation("com.google.zxing:core:3.5.1")
-    
     // Charts for admin visualization
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    
+    // ZXing barcode scanner library
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 }

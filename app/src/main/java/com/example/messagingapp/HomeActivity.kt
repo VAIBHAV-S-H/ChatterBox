@@ -1,9 +1,8 @@
 package com.example.messagingapp
 
-import android.annotation.SuppressLint
+
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -12,7 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.messagingapp.admin.AdminEncryptionVisualizerActivity
 import com.example.messagingapp.admin.AdminManager
-import com.example.messagingapp.crypto.CryptoManager
 import com.example.messagingapp.details.User
 import com.example.messagingapp.details.UserAdapter
 import com.example.messagingapp.dialogs.UserProfileDialog
@@ -29,15 +26,7 @@ import com.example.messagingapp.dialogs.AddFriendDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.util.*
-import android.graphics.Bitmap
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.MultiFormatWriter
-import com.google.zxing.common.BitMatrix
-import com.journeyapps.barcodescanner.BarcodeEncoder
-import android.Manifest
-import android.content.pm.PackageManager
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+
 
 class HomeActivity : AppCompatActivity() {
 
@@ -54,9 +43,6 @@ class HomeActivity : AppCompatActivity() {
 
     // Keep a cached copy of the current user profile
     private var cachedUserProfile: User? = null
-
-    // Constants for permission requests
-    private val CAMERA_PERMISSION_REQUEST_CODE = 100
 
     // Add a reference to the add friend dialog to be used for permissions
     private var addFriendDialog: AddFriendDialog? = null
