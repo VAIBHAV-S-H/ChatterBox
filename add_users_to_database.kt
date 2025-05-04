@@ -13,13 +13,13 @@ fun addExistingUsersToDatabase() {
     val users = listOf(
         User(
             uid = "7P4pilOp0TVgrMatr1jyYRYnLFaT2", // From your Firebase Auth console
-            email = "eonicsimurgh@gmail.com",
-            name = "Simurgh" // Or whatever display name you want
+            email = "simsimsim@gmail.com",
+            name = "sisi" // Or whatever display name you want
         ),
         User(
             uid = "yWV8r3DSEgd5M2nuGydFhIL31OD2", // From your Firebase Auth console
-            email = "1nt22cs211.vaibhav@nmit.ac.in",
-            name = "Vaibhav" // Or whatever display name you want  
+            email = "yoyo@gmail.com",
+            name = "vibes" // Or whatever display name you want  
         )
     )
     
