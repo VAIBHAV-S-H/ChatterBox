@@ -43,6 +43,9 @@ class HomeActivity : AppCompatActivity() {
     // Add a reference to the add friend dialog to be used for permissions
     private var addFriendDialog: AddFriendDialog? = null
 
+    // Add a flag to track initial load
+    private var initialLoadComplete = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -179,8 +182,17 @@ class HomeActivity : AppCompatActivity() {
             R.id.action_logout -> {
                 // Log out the user
                 Log.d(TAG, "Logout menu item clicked")
+                
+                // Detach database listeners
+                FirebaseDatabase.getInstance().getReference("connections").keepSynced(false)
+                database.keepSynced(false)
+                
+                // Clear auth state
                 auth.signOut()
-                startActivity(Intent(this, LoginActivity::class.java))
+                
+                // Redirect to main activity
+                startActivity(Intent(this, MainActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK))
                 finish()
                 true
             }
@@ -251,9 +263,11 @@ class HomeActivity : AppCompatActivity() {
     // Override onResume to refresh user connections when returning to this activity
     override fun onResume() {
         super.onResume()
-        // Reload the connected users when returning to this screen
-        loadUsers()
-        Log.d(TAG, "onResume: Refreshing user connections")
+        // Only reload users if we've already done the initial load
+        if (initialLoadComplete) {
+            loadUsers()
+            Log.d(TAG, "onResume: Refreshing user connections")
+        }
     }
 
     fun loadUsers() {
@@ -337,6 +351,8 @@ class HomeActivity : AppCompatActivity() {
                                     userList.clear()
                                     userAdapter.updateList(ArrayList(userList))
                                     updateNoUsersVisibility()
+                                    // Mark initial load as complete
+                                    initialLoadComplete = true
                                     return
                                 }
                                 
@@ -382,11 +398,16 @@ class HomeActivity : AppCompatActivity() {
                                     userAdapter.updateList(ArrayList(userList))
                                     updateNoUsersVisibility()
                                     
+                                    // Mark initial load as complete
+                                    initialLoadComplete = true
+                                    
                                     Log.d(TAG, "Loaded ${userList.size} connected users")
                                 }.addOnFailureListener { e ->
                                     Log.e(TAG, "Error loading user data: ${e.message}")
                                     Toast.makeText(this@HomeActivity, "Error loading user data", Toast.LENGTH_SHORT).show()
                                     updateNoUsersVisibility()
+                                    // Mark initial load as complete even if there's an error
+                                    initialLoadComplete = true
                                 }
                             }
                             
@@ -394,6 +415,8 @@ class HomeActivity : AppCompatActivity() {
                                 Log.e(TAG, "Database error loading friendId connections: ${error.message}")
                                 Toast.makeText(this@HomeActivity, "Error loading connections", Toast.LENGTH_SHORT).show()
                                 updateNoUsersVisibility()
+                                // Mark initial load as complete even if there's an error
+                                initialLoadComplete = true
                             }
                         })
                 }
@@ -402,6 +425,8 @@ class HomeActivity : AppCompatActivity() {
                     Log.e(TAG, "Database error loading userId connections: ${error.message}")
                     Toast.makeText(this@HomeActivity, "Error loading connections", Toast.LENGTH_SHORT).show()
                     updateNoUsersVisibility()
+                    // Mark initial load as complete even if there's an error
+                    initialLoadComplete = true
                 }
             })
     }

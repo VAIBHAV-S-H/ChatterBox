@@ -274,8 +274,16 @@ class UserListActivity : AppCompatActivity() {
         return try {
             when (item.itemId) {
                 R.id.action_logout -> {
+                    // Detach database listeners
+                    FirebaseDatabase.getInstance().getReference("connections").keepSynced(false)
+                    database.keepSynced(false)
+                    
+                    // Clear auth state
                     auth.signOut()
-                    startActivity(Intent(this, MainActivity::class.java))
+                    
+                    // Redirect to main activity
+                    startActivity(Intent(this, MainActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK))
                     finish()
                     true
                 }
